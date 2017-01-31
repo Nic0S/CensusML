@@ -23,7 +23,9 @@ class InputData:
         self.original_data = np.array(self.original_data)
 
         self.num_columns = self.original_data.shape[1]
+        self.num_rows = self.original_data.shape[0]
 
+        # Set up the category data, used to make one hot encodings
         for i in range(0, self.num_columns):
             if i in self.skip_columns:
                 continue
@@ -38,7 +40,26 @@ class InputData:
             else:
                 self.column_categories.append(None)
 
-        print(self.column_categories)
+        for row in self.original_data:
+            modified_row = []
+
+            for i, cell in enumerate(row):
+                if i in self.skip_columns:
+                    continue
+
+                if i in self.categorize_columns:
+                    one_hot = np.zeros(len(self.column_categories[i]), np.int8)
+                    one_hot[self.column_categories[i].index(cell)] = 1
+                    modified_row.extend(one_hot)
+
+                else:
+                    modified_row.append(int(cell))
+
+            self.modified_data.append(modified_row)
+
+        print(self.modified_data)
+
+
 
 
 
