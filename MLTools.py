@@ -16,19 +16,21 @@ class InputData:
         self.skip_columns = skip_columns
         self.categorize_columns = categorize_columns
 
+        self.num_columns = len(data[0].split(delimeter))
+
+
         for row in data:
             split_row = row.strip().split(delimeter)
-            self.original_data.append(split_row)
+            split_row = [item.strip() for item in split_row]
+
+            if len(split_row) == self.num_columns:
+                self.original_data.append(split_row)
+                self.num_rows += 1
 
         self.original_data = np.array(self.original_data)
 
-        self.num_columns = self.original_data.shape[1]
-        self.num_rows = self.original_data.shape[0]
-
         # Set up the category data, used to make one hot encodings
         for i in range(0, self.num_columns):
-            if i in self.skip_columns:
-                continue
 
             if i in self.categorize_columns:
                 column = self.original_data[:, i]
@@ -56,40 +58,6 @@ class InputData:
                     modified_row.append(int(cell))
 
             self.modified_data.append(modified_row)
-
-        print(self.modified_data)
-
-
-
-
-
-
-        # for row in data:
-        #     split_row = row.strip().split(delimeter)
-        #
-        #     for i, cell in enumerate(split_row):
-        #
-        #         # This row needs to be categorized
-        #         if i in categorize_columns:
-        #
-        #             # This category has already been made
-        #             if cell in self.column_categories[i]:
-        #
-        #                 # Get the category value from column_categories and add it to the row
-        #                 modified_row.append(self.column_categories[i].index(cell))
-        #
-        #             # Category has not been seen yet, create it
-        #             else:
-        #                 self.column_categories[i].append(cell)
-        #                 modified_row.append(len(self.column_categories[i]) - 1)
-        #
-        #         else:
-        #             modified_row.append(cell)
-        #
-        #     print(modified_row)
-
-
-
 
 
 
