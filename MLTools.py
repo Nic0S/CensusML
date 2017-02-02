@@ -11,10 +11,10 @@ class InputData:
 
     column_categories = []
 
-    def __init__(self, data, delimeter=",", skip_columns=[], categorize_columns=[]):
+    def __init__(self, data, delimeter=",", skip_columns=[], one_hot_columns=[]):
 
         self.skip_columns = skip_columns
-        self.categorize_columns = categorize_columns
+        self.categorize_columns = one_hot_columns
 
         self.num_columns = len(data[0].split(delimeter))
 
@@ -58,6 +58,8 @@ class InputData:
                     modified_row.append(int(cell))
 
             self.modified_data.append(modified_row)
+
+        self.modified_data = np.array(self.modified_data)
 
 
 
