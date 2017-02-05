@@ -10,7 +10,11 @@ import os
 
 testData = open("census.data")
 testString = testData.readlines()
-inputData = MLTools.InputData(testString, one_hot_columns=[1, 3, 4, 5, 6, 7, 8, 9, 13, 14], skip_columns=[2])
+
+# MLTools.create_categories("categories.npy", testString, one_hot_columns=[1, 3, 4, 5, 6, 7, 8, 9, 13, 14])
+
+inputData = MLTools.InputData(testString, "categories.npy", one_hot_columns=[1, 3, 4, 5, 6, 7, 8, 9, 13, 14],
+                              skip_columns=[2])
 
 testX = inputData.modified_data[:, :-1]
 testY = inputData.modified_data[:, -2:-1]
@@ -36,7 +40,7 @@ model.add(Dense(64))
 model.add(Dense(2))
 
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-model.fit(testX, testY, nb_epoch=20, batch_size=32)
+model.fit(testX, testY, nb_epoch=25, batch_size=32)
 
 model_json = model.to_json()
 with open("models/model.json", "w") as json_file:

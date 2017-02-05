@@ -7,20 +7,20 @@ class InputData:
     modified_data = []
 
     skip_columns = []
-    categorize_columns = []
+    one_hot_columns = []
 
     column_categories = []
 
-    def __init__(self, data, delimeter=",", skip_columns=[], one_hot_columns=[]):
+    def __init__(self, data, category_file, delimeter=",", skip_columns=[], one_hot_columns=[]):
 
         self.skip_columns = skip_columns
-        self.categorize_columns = one_hot_columns
+        self.one_hot_columns = one_hot_columns
 
         self.num_columns = len(data[0].split(delimeter))
 
 
         for row in data:
-            split_row = row.strip().split(delimeter)
+            split_row = row.strip().replace(".", "").split(delimeter)
             split_row = [item.strip() for item in split_row]
 
             if len(split_row) == self.num_columns:
@@ -29,18 +29,21 @@ class InputData:
 
         self.original_data = np.array(self.original_data)
 
-        # Set up the category data, used to make one hot encodings
-        for i in range(0, self.num_columns):
+        # # Set up the category data, used to make one hot encodings
+        # for i in range(0, self.num_columns):
+        #
+        #     if i in self.one_hot_columns:
+        #         column = self.original_data[:, i]
+        #         self.column_categories.append([])
+        #
+        #         for unique_item in set(column):
+        #             self.column_categories[-1].append(unique_item)
+        #
+        #     else:
+        #         self.column_categories.append(None)
 
-            if i in self.categorize_columns:
-                column = self.original_data[:, i]
-                self.column_categories.append([])
-
-                for unique_item in set(column):
-                    self.column_categories[-1].append(unique_item)
-
-            else:
-                self.column_categories.append(None)
+        self.column_categories = np.load(category_file)
+        print(self.column_categories)
 
         for row in self.original_data:
             modified_row = []
@@ -49,7 +52,7 @@ class InputData:
                 if i in self.skip_columns:
                     continue
 
-                if i in self.categorize_columns:
+                if i in self.one_hot_columns:
                     one_hot = np.zeros(len(self.column_categories[i]), np.int8)
                     one_hot[self.column_categories[i].index(cell)] = 1
                     modified_row.extend(one_hot)
@@ -62,7 +65,38 @@ class InputData:
         self.modified_data = np.array(self.modified_data)
 
 
+def create_categories(filename, data, one_hot_columns, delimeter=","):
 
+    column_categories = []
+    original_data = []
+    num_columns = len(data[0].split(delimeter))
 
+    for row in data:
+        split_row = row.strip().split(delimeter)
+        split_row = [item.strip() for item in split_row]
 
+        if len(split_row) == num_columns:
+            original_data.append(split_row)
+            # self.num_rows += 1
+
+    original_data = np.array(original_data)
+
+    # Set up the category data, used to make one hot encodings
+    for i in range(0, num_columns):
+
+        if i in one_hot_columns:
+            column = original_data[:, i]
+            column_categories.append([])
+
+            for unique_item in set(column):
+                column_categories[-1].append(unique_item)
+
+        else:
+            column_categories.append(None)
+
+    np.save(filename, column_categories)
+
+    # loaded_cats = np.load(filename)
+    # print(loaded_cats)
+    # print(np.array_equal(column_categories, loaded_cats))
 
