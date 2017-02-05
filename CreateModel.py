@@ -5,6 +5,7 @@ from keras.layers import Dense
 from keras.utils.np_utils import to_categorical
 
 import numpy as np
+import os
 
 
 testData = open("census.data")
@@ -35,4 +36,10 @@ model.add(Dense(64))
 model.add(Dense(2))
 
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-model.fit(testX, testY, nb_epoch=10000, batch_size=1000)
+model.fit(testX, testY, nb_epoch=20, batch_size=32)
+
+model_json = model.to_json()
+with open("models/model.json", "w") as json_file:
+    json_file.write(model_json)
+model.save_weights("models/model.h5")
+print("Saved model to disk")
