@@ -1,0 +1,7 @@
+model_64
+model_128
+model_128_normal_relu
+model_128nr_64nr
+model_128nr_64nr_64nr
+model_128nr_128nr
+model_128nr_drop20_64nr

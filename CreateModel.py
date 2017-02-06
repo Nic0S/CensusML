@@ -1,11 +1,12 @@
 import MLTools
 
 from keras.models import Sequential
-from keras.layers import Dense
+from keras.layers import Dense, Dropout
 from keras.utils.np_utils import to_categorical
 
 import numpy as np
-import os
+
+model_name = "model_256nr_drop35_256nr_drop35_128nr"
 
 
 testData = open("census.data")
@@ -36,15 +37,21 @@ print(testY)
 
 
 model = Sequential()
-model.add(Dense(128, input_dim=testX.shape[1], init='normal', activation='relu'))
-model.add(Dense(64, init='normal', activation='relu'))
+model.add(Dense(256, input_dim=testX.shape[1], init='normal', activation='relu'))
+model.add(Dropout(0.35))
+model.add(Dense(256, init='normal', activation='relu'))
+model.add(Dropout(0.35))
+model.add(Dense(128, init='normal', activation='relu'))
 model.add(Dense(1, init='normal', activation='sigmoid'))
 
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-model.fit(testX, testY, nb_epoch=200, batch_size=32)
+model.fit(testX, testY, nb_epoch=500, batch_size=32)
 
 model_json = model.to_json()
-with open("models/model_128nr_64nr.json", "w") as json_file:
+with open("models/" + model_name + ".json", "w") as json_file:
     json_file.write(model_json)
-model.save_weights("models/model_128nr_64nr.h5")
+model.save_weights("models/" + model_name + ".h5")
 print("Saved model to disk")
+
+with open("models/models.list", "a") as models_file:
+    models_file.write("\n" + model_name)
