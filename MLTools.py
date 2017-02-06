@@ -43,7 +43,7 @@ class InputData:
         #         self.column_categories.append(None)
 
         self.column_categories = np.load(category_file)
-        print(self.column_categories)
+        # print(self.column_categories)
 
         for row in self.original_data:
             modified_row = []

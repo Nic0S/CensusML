@@ -29,7 +29,7 @@ for model in models:
     # print(testX)
     # print(testY)
     score = loaded_model.evaluate(testX, testY, verbose=0)
-    print ("%s: %.2f%%" % (loaded_model.metrics_names[1], score[1]*100))
+    print("%s: %.2f%%\n" % (loaded_model.metrics_names[1], score[1]*100))
 
     # print(loaded_model.metrics_names)
     # print(score)
