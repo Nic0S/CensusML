@@ -36,14 +36,15 @@ print(testY)
 
 
 model = Sequential()
-model.add(Dense(128, input_dim=testX.shape[1]))
+model.add(Dense(128, input_dim=testX.shape[1], init='normal', activation='relu'))
+model.add(Dense(64, init='normal', activation='relu'))
 model.add(Dense(1, init='normal', activation='sigmoid'))
 
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 model.fit(testX, testY, nb_epoch=200, batch_size=32)
 
 model_json = model.to_json()
-with open("models/model_128.json", "w") as json_file:
+with open("models/model_128nr_64nr.json", "w") as json_file:
     json_file.write(model_json)
-model.save_weights("models/model_128.h5")
+model.save_weights("models/model_128nr_64nr.h5")
 print("Saved model to disk")
