@@ -65,14 +65,14 @@ class InputData:
         self.modified_data = np.array(self.modified_data)
 
 
-def create_categories(filename, data, one_hot_columns, delimeter=","):
+def create_categories(filename, data, one_hot_columns, delimiter=","):
 
     column_categories = []
     original_data = []
-    num_columns = len(data[0].split(delimeter))
+    num_columns = len(data[0].split(delimiter))
 
     for row in data:
-        split_row = row.strip().split(delimeter)
+        split_row = row.strip().split(delimiter)
         split_row = [item.strip() for item in split_row]
 
         if len(split_row) == num_columns:

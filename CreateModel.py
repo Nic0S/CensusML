@@ -11,12 +11,14 @@ import os
 testData = open("census.data")
 testString = testData.readlines()
 
-# MLTools.create_categories("categories.npy", testString, one_hot_columns=[1, 3, 4, 5, 6, 7, 8, 9, 13, 14])
+# MLTools.create_categories("categories.npy", testString, one_hot_columns=[1, 3, 5, 6, 7, 8, 9, 13, 14])
 
-inputData = MLTools.InputData(testString, "categories.npy", one_hot_columns=[1, 3, 4, 5, 6, 7, 8, 9, 13, 14],
+inputData = MLTools.InputData(testString, "categories.npy", one_hot_columns=[1, 3, 5, 6, 7, 8, 9, 13, 14],
                               skip_columns=[2])
 
-testX = inputData.modified_data[:, :-1]
+print(inputData.modified_data)
+print(inputData.modified_data[:, :-2])
+testX = inputData.modified_data[:, :-2]
 testY = inputData.modified_data[:, -2:-1]
 
 count_greater = np.count_nonzero(testY == 1)
@@ -34,16 +36,16 @@ print(testY)
 
 
 model = Sequential()
-model.add(Dense(64, input_dim=testX.shape[1]))
-model.add(Dense(64))
-model.add(Dense(64))
+model.add(Dense(256, input_dim=testX.shape[1]))
+model.add(Dense(128))
+model.add(Dense(128))
 model.add(Dense(2))
 
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-model.fit(testX, testY, nb_epoch=25, batch_size=32)
+model.fit(testX, testY, nb_epoch=200, batch_size=32)
 
 model_json = model.to_json()
-with open("models/model.json", "w") as json_file:
+with open("models/model_128_128_128.json", "w") as json_file:
     json_file.write(model_json)
-model.save_weights("models/model.h5")
+model.save_weights("models/model_128_128_128.h5")
 print("Saved model to disk")
